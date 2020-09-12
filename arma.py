@@ -11,17 +11,13 @@ Graph classification using ARMA filter
 
 
 """
-
-import os.path as osp
 import torch
 import torch.nn.functional as F
 from torch import nn
 from torch_geometric.datasets import TUDataset
 from torch_geometric.data import DataLoader
-import torch_geometric.transforms as T
 from torch_geometric.nn import ARMAConv, global_mean_pool
 from torch_geometric.utils import to_networkx
-from torch_geometric.transforms import Constant
 import networkx as nx
 
 ##--
@@ -79,13 +75,12 @@ class Net(torch.nn.Module):
 ##########
 
 
-dataset = TUDataset(root='/tmp/MUTAG', name='MUTAG',use_node_attr=True, pre_transform=add_nodeFeatures()).shuffle()    
-#dataset = TUDataset(root='/tmp/MUTAG', name='MUTAG',use_node_attr=True).shuffle()    
+dataset = TUDataset(root='/tmp/ENZYMES', name='ENZYMES',use_node_attr=True, pre_transform=add_nodeFeatures()).shuffle()    
+
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 train_loader = DataLoader(dataset[:(len(dataset)*80)//100 ], batch_size=32, shuffle=True)
 val_loader = DataLoader(dataset[(len(dataset)*80)//100:(len(dataset)*80)//100 +  (len(dataset)*10)//100 ], batch_size=32, shuffle=True)
-#test_loader = DataLoader(dataset[2*len(dataset)//3:], batch_size=32, shuffle= True)
 model= Net().to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-4)
 
